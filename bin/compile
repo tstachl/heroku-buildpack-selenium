@@ -40,16 +40,10 @@ APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state
 topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
-for PACKAGE in $(cat $BUILD_DIR/Aptfile); do
-  topic "Fetching .debs for $PACKAGE"
-  apt-get $APT_OPTIONS -y -d install $PACKAGE | indent
-done
-
-topic "Fetching .debs for unzip"
-apt-get $APT_OPTIONS -y -d install unzip | indent
+topic "Fetching .debs for xvfb libglide3 xfs xserver unzip"
+apt-get $APT_OPTIONS -y -d install xvfb libglide3 xfs xserver unzip | indent
 
 topic "Fetching google chrome"
-# fetch google chrome deb
 CHROME_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 curl $CHROME_URL -s -o $APT_CACHE_DIR/archives/google-chrome-stable_current_amd64.deb
 
