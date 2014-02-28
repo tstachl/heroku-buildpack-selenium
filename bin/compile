@@ -45,6 +45,9 @@ for PACKAGE in $(cat $BUILD_DIR/Aptfile); do
   apt-get $APT_OPTIONS -y -d install $PACKAGE | indent
 done
 
+topic "Fetching .debs for unzip"
+apt-get $APT_OPTIONS -y -d install unzip | indent
+
 topic "Fetching google chrome"
 # fetch google chrome deb
 CHROME_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
@@ -57,10 +60,40 @@ for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   dpkg -x $DEB $BUILD_DIR/.apt/
 done
 
+curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
+. bin/util
+. bin/java
+
+# create default system.properties 
+if [ ! -f ${BUILD_DIR}/system.properties ]; then
+  echo "java.runtime.version=1.7" > ${BUILD_DIR}/system.properties
+fi
+
+# install JDK 
+javaVersion=$(detect_java_version ${BUILD_DIR})
+topic "Installing OpenJDK ${javaVersion}..."
+install_java ${BUILD_DIR} ${javaVersion}
+jdk_overlay ${BUILD_DIR}
+
+# Create the vendor selenium directory
+mkdir -p $build_dir/vendor/selenium/bin
+
+# Download selenium standalone server
+status "Downloading and installing Selenium"
+selenium_url="http://selenium-release.storage.googleapis.com/2.40/selenium-server-standalone-2.40.0.jar"
+curl $selenium_url -s -o $build_dir/vendor/selenium/selenium.jar
+
+# Download google chrome driver
+status "Downloading and installing ChromeDriver"
+chromedriver_url="http://chromedriver.storage.googleapis.com/2.9/chromedriver_linux64.zip"
+curl $chromedriver_url -s -o $build_dir/vendor/selenium/bin/chromedriver.zip
+unzip $build_dir/vendor/selenium/bin/chromedriver.zip
+rm $build_dir/vendor/selenium/bin/chromedriver.zip
+
 topic "Writing profile script"
 mkdir -p $BUILD_DIR/.profile.d
 cat <<EOF >$BUILD_DIR/.profile.d/000_apt.sh
-export PATH="\$HOME/.apt/usr/bin:\$HOME/bin:$PATH"
+export PATH="\$HOME/.apt/usr/bin:\$HOME/vendor/selenium/bin:$PATH"
 export LD_LIBRARY_PATH="\$HOME/.apt/usr/lib:\$LD_LIBRARY_PATH"
 export INCLUDE_PATH="\$HOME/.apt/usr/include:\$INCLUDE_PATH"
 export CPATH="\$INCLUDE_PATH"
