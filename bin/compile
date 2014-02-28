@@ -41,7 +41,7 @@ topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
 topic "Fetching .debs for xvfb libglide3 xfs xserver unzip"
-apt-get $APT_OPTIONS -y -d install xvfb libglide3 xfs xserver unzip | indent
+apt-get $APT_OPTIONS -y -d install xvfb libglide3 xfs libgl1-mesa-dri xserver unzip | indent
 
 topic "Fetching google chrome"
 CHROME_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
