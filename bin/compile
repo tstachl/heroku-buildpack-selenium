@@ -47,7 +47,8 @@ done
 
 topic "Fetching google chrome"
 # fetch google chrome deb
-wget "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" -P $APT_CACHE_DIR/archives/
+CHROME_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+curl $CHROME_URL -s -o $APT_CACHE_DIR/archives/google-chrome-stable_current_amd64.deb
 
 mkdir -p $BUILD_DIR/.apt
 
