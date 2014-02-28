@@ -87,7 +87,7 @@ curl $selenium_url -s -o $BUILD_DIR/vendor/selenium/selenium.jar
 topic "Downloading and installing ChromeDriver"
 chromedriver_url="http://chromedriver.storage.googleapis.com/2.9/chromedriver_linux64.zip"
 curl $chromedriver_url -s -o $BUILD_DIR/vendor/selenium/bin/chromedriver.zip
-unzip $BUILD_DIR/vendor/selenium/bin/chromedriver.zip
+$BUILD_DIR/.apt/unzip $BUILD_DIR/vendor/selenium/bin/chromedriver.zip
 rm $BUILD_DIR/vendor/selenium/bin/chromedriver.zip
 
 topic "Writing profile script"
