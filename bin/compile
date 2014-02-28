@@ -37,13 +37,6 @@ mkdir -p "$APT_STATE_DIR/lists/partial"
 
 APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 
-topic "Adding google to the source.list"
-# Add Google public key to apt
-wget -q -O - "https://dl-ssl.google.com/linux/linux_signing_key.pub" | apt-key add - | indent
-
-# Add Google to the apt-get source list
-echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list
-
 topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
@@ -51,6 +44,10 @@ for PACKAGE in $(cat $BUILD_DIR/Aptfile); do
   topic "Fetching .debs for $PACKAGE"
   apt-get $APT_OPTIONS -y -d install $PACKAGE | indent
 done
+
+topic "Fetching google chrome"
+# fetch google chrome deb
+wget "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" -P $APT_CACHE_DIR/archives/
 
 mkdir -p $BUILD_DIR/.apt
 
