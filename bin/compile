@@ -76,19 +76,19 @@ install_java ${BUILD_DIR} ${javaVersion}
 jdk_overlay ${BUILD_DIR}
 
 # Create the vendor selenium directory
-mkdir -p $build_dir/vendor/selenium/bin
+mkdir -p $BUILD_DIR/vendor/selenium/bin
 
 # Download selenium standalone server
-status "Downloading and installing Selenium"
+topic "Downloading and installing Selenium"
 selenium_url="http://selenium-release.storage.googleapis.com/2.40/selenium-server-standalone-2.40.0.jar"
-curl $selenium_url -s -o $build_dir/vendor/selenium/selenium.jar
+curl $selenium_url -s -o $BUILD_DIR/vendor/selenium/selenium.jar
 
 # Download google chrome driver
-status "Downloading and installing ChromeDriver"
+topic "Downloading and installing ChromeDriver"
 chromedriver_url="http://chromedriver.storage.googleapis.com/2.9/chromedriver_linux64.zip"
-curl $chromedriver_url -s -o $build_dir/vendor/selenium/bin/chromedriver.zip
-unzip $build_dir/vendor/selenium/bin/chromedriver.zip
-rm $build_dir/vendor/selenium/bin/chromedriver.zip
+curl $chromedriver_url -s -o $BUILD_DIR/vendor/selenium/bin/chromedriver.zip
+unzip $BUILD_DIR/vendor/selenium/bin/chromedriver.zip
+rm $BUILD_DIR/vendor/selenium/bin/chromedriver.zip
 
 topic "Writing profile script"
 mkdir -p $BUILD_DIR/.profile.d
